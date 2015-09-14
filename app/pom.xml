@@ -18,6 +18,10 @@
             <artifactId>jackson-module-scala_${scala.version}</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.netflix.governator</groupId>
+            <artifactId>governator</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
         </dependency>
