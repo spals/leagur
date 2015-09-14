@@ -1,0 +1,149 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.spals.leagur</groupId>
+    <artifactId>spals-leagur-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <!-- Dependency versions -->
+        <dropwizard.version>0.9.0-rc2</dropwizard.version>
+        <governator.version>1.9.3</governator.version>
+        <guava.version>19.0-rc1</guava.version>
+        <!-- The guice version must match what is required by governator.version -->
+        <guice.version>4.0</guice.version>
+        <!-- The jackson version must match what is required by dropwizard.version -->
+        <jackson.version>2.5.3</jackson.version>
+        <scala.version>2.11</scala.version>
+        <scala-library.version>2.11.7</scala-library.version>
+        <scalatest.version>2.2.5</scalatest.version>
+
+        <!-- Plugin versions -->
+        <scala-maven-plugin.version>3.2.2</scala-maven-plugin.version>
+        <scalatest-maven-plugin.version>1.0</scalatest-maven-plugin.version>
+    </properties>
+
+    <modules>
+        <!-- Library modules. -->
+
+        <!-- Application modules. These must come after all library modules -->
+        <module>app</module>
+        <!--<module>app-test</module>-->
+    </modules>
+
+    <!--
+    Global dependencies.
+    There shouldn't be very many of these (i.e. only things used across
+    all modules...like logging)
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.governator</groupId>
+            <artifactId>governator</artifactId>
+            <version>${governator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-logging</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala-library.version}</version>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-scala_${scala.version}</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-auth</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-core</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-jackson</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-jersey</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-validation</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest_${scala.version}</artifactId>
+                <version>${scalatest.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${scala-maven-plugin.version}</version>
+                <configuration>
+                    <scalaCompatVersion>${scala.version}</scalaCompatVersion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--<plugin>-->
+                <!--<groupId>org.scalatest</groupId>-->
+                <!--<artifactId>scalatest-maven-plugin</artifactId>-->
+                <!--<version>${scalatest-maven-plugin.version}</version>-->
+                <!--<configuration>-->
+                    <!--<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>-->
+                    <!--<junitxml>.</junitxml>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>scala-test</id>-->
+                        <!--<goals>-->
+                            <!--<goal>test</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+        </plugins>
+    </build>
+</project>
+
