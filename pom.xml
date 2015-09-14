@@ -28,6 +28,8 @@
 
     <modules>
         <!-- Library modules. -->
+        <module>api</module>
+        <!--<module>api-test</module>-->
         <module>model</module>
         <!--<module>model-test</module>-->
         <module>store</module>
@@ -107,6 +109,11 @@
                 <groupId>io.dropwizard</groupId>
                 <artifactId>dropwizard-validation</artifactId>
                 <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.spals.leagur</groupId>
+                <artifactId>spals-leagur-api</artifactId>
+                <version>${leagur.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.spals.leagur</groupId>

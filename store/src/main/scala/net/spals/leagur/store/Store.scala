@@ -1,5 +1,7 @@
 package net.spals.leagur.store
 
+import java.util.Optional
+
 import net.spals.leagur.model.Entity
 
 /**
@@ -10,13 +12,13 @@ import net.spals.leagur.model.Entity
  */
 trait Store {
 
-  def all(tableName: String, key: String): List[Entity]
+  def all(tableName: String, key: Any): List[Entity]
 
-  def delete(tableName: String, key: String): Unit
+  def delete(tableName: String, key: Any): Unit
 
-  def get(tableName: String, key: String): Entity
+  def get(tableName: String, key: Any): Option[Entity]
 
-  def post(tableName: String, key: String, entity: Entity): Entity
+  def post(tableName: String, key: Any, entity: Entity): Entity
 
-  def put(tableName: String, key: String, entity: Entity): Entity
+  def put(tableName: String, key: Any, entity: Entity): Entity
 }
