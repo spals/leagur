@@ -12,6 +12,8 @@
         <dropwizard.version>0.9.0-rc4</dropwizard.version>
         <governator.version>1.9.3</governator.version>
         <guava.version>19.0-rc1</guava.version>
+        <!-- The guice version must match what is required by governator.version -->
+        <guice.version>4.0</guice.version>
         <!-- The jackson version must match what is required by dropwizard.version -->
         <jackson.version>2.6.1</jackson.version>
         <scala.version>2.11</scala.version>
@@ -27,8 +29,8 @@
         <!-- Library modules. -->
 
         <!-- Application modules. These must come after all library modules -->
-        <!--<module>app</module>
-        <module>app-test</module>-->
+        <module>app</module>
+        <!--<module>app-test</module>-->
     </modules>
 
     <!--
@@ -41,6 +43,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
         </dependency>
         <dependency>
             <groupId>com.netflix.governator</groupId>
@@ -67,9 +74,35 @@
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-auth</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-core</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-jackson</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-jersey</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-validation</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest_${scala.version}</artifactId>
                 <version>${scalatest.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -80,6 +113,9 @@
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>${scala-maven-plugin.version}</version>
+                <configuration>
+                    <scalaCompatVersion>${scala.version}</scalaCompatVersion>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
