@@ -16,6 +16,7 @@
         <guice.version>4.0</guice.version>
         <!-- The jackson version must match what is required by dropwizard.version -->
         <jackson.version>2.5.3</jackson.version>
+        <leagur.version>1.0.0</leagur.version>
         <scala.version>2.11</scala.version>
         <scala-library.version>2.11.7</scala-library.version>
         <scalatest.version>2.2.5</scalatest.version>
@@ -27,6 +28,12 @@
 
     <modules>
         <!-- Library modules. -->
+        <module>api</module>
+        <!--<module>api-test</module>-->
+        <module>model</module>
+        <!--<module>model-test</module>-->
+        <module>store</module>
+        <!--<module>store-test</module>-->
 
         <!-- Application modules. These must come after all library modules -->
         <module>app</module>
@@ -40,18 +47,13 @@
     -->
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>${guice.version}</version>
         </dependency>
         <dependency>
             <groupId>com.netflix.governator</groupId>
-            <artifactId>governator</artifactId>
+            <artifactId>governator-annotations</artifactId>
             <version>${governator.version}</version>
         </dependency>
         <dependency>
@@ -72,6 +74,23 @@
                 <groupId>com.fasterxml.jackson.module</groupId>
                 <artifactId>jackson-module-scala_${scala.version}</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.governator</groupId>
+                <artifactId>governator</artifactId>
+                <version>${governator.version}</version>
+                <exclusions>
+                    <!-- DropWizard ships with a later version -->
+                    <exclusion>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-validator</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>io.dropwizard</groupId>
@@ -97,6 +116,26 @@
                 <groupId>io.dropwizard</groupId>
                 <artifactId>dropwizard-validation</artifactId>
                 <version>${dropwizard.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.spals.leagur</groupId>
+                <artifactId>spals-leagur-api</artifactId>
+                <version>${leagur.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.spals.leagur</groupId>
+                <artifactId>spals-leagur-app</artifactId>
+                <version>${leagur.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.spals.leagur</groupId>
+                <artifactId>spals-leagur-model</artifactId>
+                <version>${leagur.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.spals.leagur</groupId>
+                <artifactId>spals-leagur-store</artifactId>
+                <version>${leagur.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.scalatest</groupId>
