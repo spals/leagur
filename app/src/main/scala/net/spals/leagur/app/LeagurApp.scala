@@ -7,6 +7,7 @@ import com.netflix.governator.guice.LifecycleInjector
 import io.dropwizard.configuration.{EnvironmentVariableSubstitutor, SubstitutingSourceProvider}
 import io.dropwizard.setup.{Bootstrap, Environment}
 import io.dropwizard.{Application, Configuration}
+import net.spals.leagur.api.{TeamsResource, AboutResource}
 import net.spals.leagur.app.config.ClassLoaderConfigurationSourceProvider
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -77,6 +78,10 @@ class LeagurApp(serviceFileConfigName: String) extends Application[Configuration
         LeagurApp.LOGGER.info("Shutting down Leagur application...")
         manager.close
       }
+
+      val injector = lifecycleInjector.createInjector
+      env.jersey().register(injector.getInstance(classOf[AboutResource]))
+      env.jersey().register(injector.getInstance(classOf[TeamsResource]))
     } catch {
       case t: Throwable => {
         LeagurApp.LOGGER.error("Error running Leagur !!", t)
