@@ -4,8 +4,10 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.google.common.base.Preconditions.checkNotNull
 import com.google.common.collect.Lists
 import com.netflix.governator.guice.LifecycleInjector
+import io.dropwizard.configuration.{EnvironmentVariableSubstitutor, SubstitutingSourceProvider}
 import io.dropwizard.setup.{Bootstrap, Environment}
 import io.dropwizard.{Application, Configuration}
+import net.spals.leagur.app.config.ClassLoaderConfigurationSourceProvider
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
@@ -20,12 +22,12 @@ object LeagurApp {
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[LeagurApp])
 
   def main (args: Array[String]) {
-//    val appArgs = defaultAppArgs(args)
+    val appArgs = defaultAppArgs(args)
     try {
-      new LeagurApp(LEAGUR_SERVICE_CONFIG_FILE_NAME).run(args:_*)
+      new LeagurApp(LEAGUR_SERVICE_CONFIG_FILE_NAME).run(appArgs:_*)
     } catch {
       case t: Throwable => {
-        LOGGER.error(s"Error running command line with arguments: $args", t)
+        LOGGER.error(s"Error running command line with arguments: $appArgs", t)
       }
     }
   }
@@ -53,6 +55,11 @@ class LeagurApp(serviceFileConfigName: String) extends Application[Configuration
     LeagurApp.LOGGER.info("Initializing Leagur application...")
     // Register the Jackson scala module
     bootstrap.getObjectMapper.registerModule(new DefaultScalaModule)
+    // Setup to provide application configuration from the classpath
+    bootstrap.setConfigurationSourceProvider(
+      new SubstitutingSourceProvider(
+        new ClassLoaderConfigurationSourceProvider(this.getClass.getClassLoader),
+        new EnvironmentVariableSubstitutor(false)))
   }
 
   override def run(appConfig: Configuration, env: Environment): Unit = {
