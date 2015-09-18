@@ -20,6 +20,7 @@
         <scala.version>2.11</scala.version>
         <scala-library.version>2.11.7</scala-library.version>
         <scalatest.version>2.2.5</scalatest.version>
+        <typesafe.config.version>1.3.0</typesafe.config.version>
 
         <!-- Plugin versions -->
         <scala-maven-plugin.version>3.2.2</scala-maven-plugin.version>
@@ -34,6 +35,8 @@
         <!--<module>model-test</module>-->
         <module>store</module>
         <!--<module>store-test</module>-->
+        <module>util</module>
+        <!--<module>util-test</module>-->
 
         <!-- Application modules. These must come after all library modules -->
         <module>app</module>
@@ -93,6 +96,11 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>com.typesafe</groupId>
+                <artifactId>config</artifactId>
+                <version>${typesafe.config.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.dropwizard</groupId>
                 <artifactId>dropwizard-auth</artifactId>
                 <version>${dropwizard.version}</version>
@@ -135,6 +143,11 @@
             <dependency>
                 <groupId>net.spals.leagur</groupId>
                 <artifactId>spals-leagur-store</artifactId>
+                <version>${leagur.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.spals.leagur</groupId>
+                <artifactId>spals-leagur-util</artifactId>
                 <version>${leagur.version}</version>
             </dependency>
             <dependency>

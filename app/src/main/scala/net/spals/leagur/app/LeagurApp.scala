@@ -1,14 +1,18 @@
 package net.spals.leagur.app
 
+import java.util.concurrent.atomic.AtomicReference
+
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.google.common.base.Preconditions.checkNotNull
 import com.google.common.collect.Lists
-import com.netflix.governator.guice.LifecycleInjector
+import com.google.inject.Injector
+import com.netflix.governator.guice.{BootstrapBinder, BootstrapModule, LifecycleInjector}
+import com.typesafe.config.{Config, ConfigFactory, ConfigParseOptions, ConfigResolveOptions}
 import io.dropwizard.configuration.{EnvironmentVariableSubstitutor, SubstitutingSourceProvider}
 import io.dropwizard.setup.{Bootstrap, Environment}
 import io.dropwizard.{Application, Configuration}
-import net.spals.leagur.api.{TeamsResource, AboutResource}
-import net.spals.leagur.app.config.ClassLoaderConfigurationSourceProvider
+import net.spals.leagur.api.{AboutResource, TeamsResource}
+import net.spals.leagur.app.config.{ClassLoaderConfigurationSourceProvider, TypesafeConfigurationProvider}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
@@ -48,7 +52,9 @@ object LeagurApp {
   }
 }
 
-class LeagurApp(serviceFileConfigName: String) extends Application[Configuration] {
+class LeagurApp(serviceConfigFileName: String) extends Application[Configuration] {
+
+  private val cachedInjector: AtomicReference[Injector] = new AtomicReference[Injector]
 
   override def getName = "leagur"
 
@@ -65,21 +71,11 @@ class LeagurApp(serviceFileConfigName: String) extends Application[Configuration
 
   override def run(appConfig: Configuration, env: Environment): Unit = {
     try {
-      val lifecycleInjector = LifecycleInjector.builder()
-        // Use governator to scan the Leagur packages
-        // on the classpath
-        .usingBasePackages("net.spals.leagur")
-        .build
+      val serviceConfig = ConfigFactory.load(serviceConfigFileName,
+        ConfigParseOptions.defaults.setAllowMissing(false),
+        ConfigResolveOptions.defaults)
 
-      val manager = lifecycleInjector.getLifecycleManager
-      manager.start
-      sys.ShutdownHookThread {
-        // Ensure the EventConsumer is shutdown when we exit
-        LeagurApp.LOGGER.info("Shutting down Leagur application...")
-        manager.close
-      }
-
-      val injector = lifecycleInjector.createInjector
+      val injector = createInjector(serviceConfig)
       env.jersey().register(injector.getInstance(classOf[AboutResource]))
       env.jersey().register(injector.getInstance(classOf[TeamsResource]))
     } catch {
@@ -88,5 +84,31 @@ class LeagurApp(serviceFileConfigName: String) extends Application[Configuration
         throw t
       }
     }
+  }
+
+  @throws(classOf[Exception])
+  def createInjector(serviceConfig: Config): Injector = {
+    val lifecycleInjector = LifecycleInjector.builder()
+      // Use governator to scan the Leagur packages
+      // on the classpath
+      .usingBasePackages("net.spals.leagur")
+      .withBootstrapModule(
+        new BootstrapModule {
+          override def configure(binder: BootstrapBinder): Unit = {
+            binder.bindConfigurationProvider().toInstance(new TypesafeConfigurationProvider(serviceConfig))
+          }
+        }
+      )
+      .build
+
+    val manager = lifecycleInjector.getLifecycleManager
+    manager.start
+    sys.ShutdownHookThread {
+      // Ensure the EventConsumer is shutdown when we exit
+      LeagurApp.LOGGER.info("Shutting down Leagur application...")
+      manager.close
+    }
+
+    lifecycleInjector.createInjector()
   }
 }
