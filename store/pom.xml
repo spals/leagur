@@ -14,6 +14,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.hyperdex.client</groupId>
+            <artifactId>org.hyperdex.client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>net.spals.leagur</groupId>
             <artifactId>spals-leagur-model</artifactId>
         </dependency>

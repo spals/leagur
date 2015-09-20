@@ -13,6 +13,7 @@ import io.dropwizard.setup.{Bootstrap, Environment}
 import io.dropwizard.{Application, Configuration}
 import net.spals.leagur.api.{AboutResource, TeamsResource}
 import net.spals.leagur.app.config.{ClassLoaderConfigurationSourceProvider, TypesafeConfigurationProvider}
+import net.spals.leagur.store.Store
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
@@ -75,9 +76,14 @@ class LeagurApp(serviceConfigFileName: String) extends Application[Configuration
         ConfigParseOptions.defaults.setAllowMissing(false),
         ConfigResolveOptions.defaults)
 
+      // Register API resources with Jersey
       val injector = createInjector(serviceConfig)
       env.jersey().register(injector.getInstance(classOf[AboutResource]))
       env.jersey().register(injector.getInstance(classOf[TeamsResource]))
+
+      // Run the store upgrade scripts
+      val store = injector.getInstance(classOf[Store])
+      store.migrate
     } catch {
       case t: Throwable => {
         LeagurApp.LOGGER.error("Error running Leagur !!", t)

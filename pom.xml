@@ -14,6 +14,7 @@
         <guava.version>19.0-rc1</guava.version>
         <!-- The guice version must match what is required by governator.version -->
         <guice.version>4.0</guice.version>
+        <hyperdex.version>1.8.1</hyperdex.version>
         <!-- The jackson version must match what is required by dropwizard.version -->
         <jackson.version>2.5.3</jackson.version>
         <leagur.version>1.0.0</leagur.version>
@@ -149,6 +150,11 @@
                 <groupId>net.spals.leagur</groupId>
                 <artifactId>spals-leagur-util</artifactId>
                 <version>${leagur.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hyperdex.client</groupId>
+                <artifactId>org.hyperdex.client</artifactId>
+                <version>${hyperdex.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.scalatest</groupId>
