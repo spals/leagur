@@ -17,6 +17,7 @@
         <hyperdex.version>1.8.1</hyperdex.version>
         <!-- The jackson version must match what is required by dropwizard.version -->
         <jackson.version>2.5.3</jackson.version>
+        <jython.version>2.7.1b1</jython.version>
         <leagur.version>1.0.0</leagur.version>
         <scala.version>2.11</scala.version>
         <scala-library.version>2.11.7</scala-library.version>
@@ -155,6 +156,11 @@
                 <groupId>org.hyperdex.client</groupId>
                 <artifactId>org.hyperdex.client</artifactId>
                 <version>${hyperdex.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.python</groupId>
+                <artifactId>jython</artifactId>
+                <version>${jython.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.scalatest</groupId>

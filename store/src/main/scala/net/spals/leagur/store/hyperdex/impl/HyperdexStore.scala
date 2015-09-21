@@ -1,17 +1,16 @@
 package net.spals.leagur.store.hyperdex.impl
 
-import java.util.{Optional, Collections}
+import java.util.Collections
 import javax.annotation.PostConstruct
+import javax.validation.constraints.NotNull
 
-import net.spals.leagur.store.key.StoreKey
-import org.hyperdex.client.Client
-import com.netflix.governator.annotations.{Configuration, AutoBindSingleton}
+import com.netflix.governator.annotations.{AutoBindSingleton, Configuration}
 import net.spals.leagur.model.Entity
 import net.spals.leagur.store.Store
+import net.spals.leagur.store.key.StoreKey
+import org.hyperdex.client.Client
 
 import scala.collection.JavaConverters._
-
-import javax.validation.constraints.NotNull
 
 /**
  * Hyperdex implementation of {@link Store}
@@ -27,7 +26,7 @@ class HyperdexStore extends Store {
 
   @NotNull
   @Configuration(value = "hyperdex.store.endpoint")
-  private lazy val hyperdexEndpoint: String = null
+  private var hyperdexEndpoint: String = null
 
   private var hyperdex: Client = null;
 
