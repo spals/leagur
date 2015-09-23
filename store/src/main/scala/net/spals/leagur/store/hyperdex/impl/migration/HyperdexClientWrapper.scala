@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull
 
 import com.google.common.base.Joiner
 import com.netflix.governator.annotations.{Configuration, AutoBindSingleton}
+import org.hyperdex.client.Client
 
 import scala.collection.JavaConverters._
 
@@ -13,7 +14,7 @@ import scala.collection.JavaConverters._
  * @author tkral
  */
 @AutoBindSingleton
-class HyperdexAdminWrapper {
+class HyperdexClientWrapper {
 
   @NotNull
   @Configuration(value = "hyperdex.store.port")
@@ -23,10 +24,12 @@ class HyperdexAdminWrapper {
   @Configuration(value = "hyperdex.store.endpoint")
   private var hyperdexEndpoint: String = null
 
+  var nativeClient: Client = null
   private val scriptEngine: ScriptEngine = new ScriptEngineManager().getEngineByName("jython")
 
   @PostConstruct
   def postConstruct = {
+    nativeClient = new Client(hyperdexEndpoint, hyperdexPort)
     scriptEngine.eval("import hyperdex.admin")
     scriptEngine.eval(s"adminClient = hyperdex.admin.Admin('$hyperdexEndpoint', $hyperdexPort)")
   }

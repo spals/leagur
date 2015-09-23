@@ -7,6 +7,3 @@ import scala.annotation.StaticAnnotation
  */
 case class Migration(num: Int, description: String) extends StaticAnnotation
 
-trait SchemaMigration[C] {
-  def migrate(client: C): Unit
-}

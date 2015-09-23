@@ -11,8 +11,6 @@ import net.spals.leagur.store.key.StoreKey
  */
 trait Store {
 
-  def migrate(): Unit
-
   def all(tableName: String, key: StoreKey): List[Entity]
 
   def delete(tableName: String, key: StoreKey): Unit

@@ -36,11 +36,6 @@ class HyperdexStore extends Store {
   }
 
   @Override
-  def migrate(): Unit = {
-
-  }
-
-  @Override
   def all(tableName: String, key: StoreKey): List[Entity] = {
     Collections.emptyList().asScala.toList
   }

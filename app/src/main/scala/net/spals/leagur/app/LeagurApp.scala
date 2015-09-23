@@ -14,6 +14,7 @@ import io.dropwizard.{Application, Configuration}
 import net.spals.leagur.api.{AboutResource, TeamsResource}
 import net.spals.leagur.app.config.{ClassLoaderConfigurationSourceProvider, TypesafeConfigurationProvider}
 import net.spals.leagur.store.Store
+import net.spals.leagur.store.migration.MigrationRunner
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
@@ -82,8 +83,8 @@ class LeagurApp(serviceConfigFileName: String) extends Application[Configuration
       env.jersey().register(injector.getInstance(classOf[TeamsResource]))
 
       // Run the store upgrade scripts
-      val store = injector.getInstance(classOf[Store])
-      store.migrate
+      val migrationRunner = injector.getInstance(classOf[MigrationRunner])
+      migrationRunner.runMigration
     } catch {
       case t: Throwable => {
         LeagurApp.LOGGER.error("Error running Leagur !!", t)
