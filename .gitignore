@@ -15,6 +15,7 @@ target/
 test-output/
 logs/
 bin/
+META-INF/
 
 # Output file from shade plugin
 dependency-reduced-pom.xml

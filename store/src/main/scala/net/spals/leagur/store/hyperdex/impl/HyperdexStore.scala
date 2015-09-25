@@ -25,14 +25,14 @@ class HyperdexStore extends Store {
   private var hyperdexPort: Int = 0
 
   @NotNull
-  @Configuration(value = "hyperdex.store.endpoint")
-  private var hyperdexEndpoint: String = null
+  @Configuration(value = "hyperdex.store.host")
+  private var hyperdexHost: String = null
 
   private var hyperdex: Client = null;
 
   @PostConstruct
   def postConstruct(): Unit = {
-    hyperdex = new Client(hyperdexEndpoint, hyperdexPort)
+    hyperdex = new Client(hyperdexHost, hyperdexPort)
   }
 
   @Override
