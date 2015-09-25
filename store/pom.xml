@@ -17,6 +17,14 @@
             <groupId>net.spals.leagur</groupId>
             <artifactId>spals-leagur-model</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.hyperdex.client</groupId>
+            <artifactId>org.hyperdex.client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

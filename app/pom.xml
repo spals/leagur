@@ -22,12 +22,20 @@
             <artifactId>governator</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
         </dependency>
         <dependency>
             <groupId>net.spals.leagur</groupId>
             <artifactId>spals-leagur-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.spals.leagur</groupId>
+            <artifactId>spals-leagur-util</artifactId>
         </dependency>
     </dependencies>
 
