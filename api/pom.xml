@@ -18,12 +18,8 @@
             <artifactId>dropwizard-jersey</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.spals.leagur</groupId>
-            <artifactId>spals-leagur-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.spals.leagur</groupId>
-            <artifactId>spals-leagur-store</artifactId>
+            <groupId>net.spals.appbuilder</groupId>
+            <artifactId>spals-appbuilder-annotations</artifactId>
         </dependency>
     </dependencies>
 

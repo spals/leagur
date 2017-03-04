@@ -1,9 +1,4 @@
 ##### Application Configuration #####
-# This file contains application level configuration.
-#
-# Application configuration is consumed natively by
-# the DropWizard application framework.
-#
 # For a reference as to what can be specified here, see this:
 # https://dropwizard.github.io/dropwizard/manual/configuration.html
 #
