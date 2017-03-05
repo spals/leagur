@@ -19,7 +19,9 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @AutoBindSingleton
-class AboutResource {
+public class AboutResource {
+
+    AboutResource() {  }
 
     @GET
     public Response get() {
