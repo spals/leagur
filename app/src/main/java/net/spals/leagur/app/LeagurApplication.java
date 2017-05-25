@@ -5,11 +5,12 @@ import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import net.spals.appbuilder.app.dropwizard.DropwizardApp;
-import net.spals.appbuilder.app.dropwizard.DropwizardManagedWrapper;
-import net.spals.appbuilder.executor.core.ManagedExecutorServiceRegistry;
+import net.spals.appbuilder.app.dropwizard.DropwizardWebApp;
+import net.spals.appbuilder.config.service.ServiceScan;
+import net.spals.appbuilder.executor.core.ExecutorServiceFactory;
+import net.spals.appbuilder.mapstore.core.MapStore;
 import net.spals.appbuilder.mapstore.core.migration.MapStoreMigrationRunner;
-import net.spals.appbuilder.message.core.consumer.MessageConsumer;
+import net.spals.appbuilder.model.core.ModelSerializer;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,8 @@ public final class LeagurApplication extends Application<Configuration> {
         new LeagurApplication().run("server", APP_CONFIG_FILE_NAME);
     }
 
-    private DropwizardApp.Builder appBuilder;
+    private DropwizardWebApp.Builder webAppDelegateBuilder;
+    private DropwizardWebApp webAppDelegate;
 
     @Override
     public String getName() {
@@ -38,37 +40,26 @@ public final class LeagurApplication extends Application<Configuration> {
     @Override
     public void initialize(final Bootstrap<Configuration> bootstrap) {
         // Run a service scan on all leagur packages as well as appbuilder service packages
-        final Reflections serviceScan = new Reflections("net.spals.leagur",
-                "net.spals.appbuilder.executor.core",
-                "net.spals.appbuilder.mapstore.core",
-                "net.spals.appbuilder.message.core");
-
-        this.appBuilder = new DropwizardApp.Builder(bootstrap)
-            .setLogger(LOGGER)
+        this.webAppDelegateBuilder = new DropwizardWebApp.Builder(bootstrap, LOGGER)
             .setServiceConfigFromClasspath(SERVICE_CONFIG_FILE_NAME)
-            .setServiceScan(serviceScan);
+            .setServiceScan(new ServiceScan.Builder()
+                .addServicePackages("net.spals.leagur")
+                .addDefaultServices(ExecutorServiceFactory.class)
+                .addDefaultServices(MapStore.class)
+                .addDefaultServices(ModelSerializer.class)
+                .build());
     }
 
     @Override
     public void run(final Configuration configuration, final Environment env) throws Exception {
-        try {
-            final DropwizardApp app = appBuilder.usingEnvironment(env).build();
-            final Injector serviceInjector = app.getServiceInjector();
+        this.webAppDelegate = webAppDelegateBuilder.setEnvironment(env).build();
 
-            // Run all MapStore migrations
-            final MapStoreMigrationRunner migrationRunner = serviceInjector.getInstance(MapStoreMigrationRunner.class);
-            migrationRunner.runMigrations();
+        final Injector serviceInjector = webAppDelegate.getServiceInjector();
+        // Run all MapStore migrations
+        final MapStoreMigrationRunner migrationRunner = serviceInjector.getInstance(MapStoreMigrationRunner.class);
+        migrationRunner.runMigrations();
 
-            // Attach all ExecutorServices to the Dropwizard lifecycle
-            final ManagedExecutorServiceRegistry executorServiceRegistry =
-                    serviceInjector.getInstance(ManagedExecutorServiceRegistry.class);
-            env.lifecycle().manage(DropwizardManagedWrapper.wrap(executorServiceRegistry));
-            // Attach all MessageConsumers to the Dropwizard lifecycle
-            final MessageConsumer messageConsumer = serviceInjector.getInstance(MessageConsumer.class);
-            env.lifecycle().manage(DropwizardManagedWrapper.wrap(messageConsumer));
-        } catch (Throwable t) {
-            LOGGER.error("Unexpected error encountered while running " + getName(), t);
-            throw t;
-        }
+        final ExecutorServiceFactory executorServiceFactory = serviceInjector.getInstance(ExecutorServiceFactory.class);
+        executorServiceFactory.createFixedThreadPool(1, getClass());
     }
 }
